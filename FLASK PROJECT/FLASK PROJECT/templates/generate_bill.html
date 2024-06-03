@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Bill - Supermarket Billing System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        header {
+            text-align: center;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 20px 0;
+            width: 100%;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+        }
+        main {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            margin-left: 10px;
+            color: #333333;
+            font-weight: bold;
+        }
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .product-table th, .product-table td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        .product-table th {
+            background-color: #f2f2f2;
+        }
+        .btn-submit {
+            background-color: #28a745;
+            color: #ffffff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+        .btn-print {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-left: 10px;
+        }
+        .btn-print:hover {
+            background-color: #0056b3;
+        }
+        .bill-summary {
+            margin-top: 20px;
+        }
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .bill-table th, .bill-table td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        .bill-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="http://127.0.0.1:5000/">Home</a>
+        </nav>
+        <h1>Generate Bill</h1>
+    </header>
+    <main>
+        <form method="POST" class="form-container">
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>
+                            <input type="checkbox" id="product{{ product[0] }}" name="product_id" value="{{ product[0] }}">
+                            <label for="product{{ product[0] }}">{{ product[1] }}</label>
+                        </td>
+                        <td>${{ product[2] }}</td>
+                        <td>{{ product[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn-submit">Generate Bill</button>
+        </form>
+        {% if total %}
+        <section class="bill-summary" id="bill-summary">
+            <h2>Bill Number: {{ bill_number }}</h2>
+            <h2>Total Bill: ${{ total }}</h2>
+            <table class="bill-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product[1] }}</td>
+                        <td>{{ product[2] }}</td>
+                        <td>{{ product[3] }}</td>
+                        <td>{{ product[2] * product[3] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button class="btn-print" onclick="printBill()">Print Bill</button>
+        </section>
+        {% endif %}
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script>
+        function printBill() {
+            const element = document.getElementById('bill-summary');
+            html2pdf(element, {
+                margin:       1,
+                filename:     'bill.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, logging: true, dpi: 192, letterRendering: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermarket Billing System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            text-align: center;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 20px 0;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav {
+            margin-top: 10px;
+        }
+        .btn-nav {
+            background-color: #28a745;
+            color: #ffffff;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-nav:hover {
+            background-color: #218838;
+        }
+        main {
+            padding: 20px;
+        }
+        .product-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .product-table th, .product-table td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        .product-table th {
+            background-color: #f2f2f2;
+        }
+        .btn-action {
+            background-color: #ffc107;
+            color: #ffffff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-action:hover {
+            background-color: #e0a800;
+        }
+        .logout-btn {
+            background-color: #dc3545;
+            color: #ffffff;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            float: right;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Supermarket Billing System</h1>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+        <nav>
+            <a href="{{ url_for('add_product') }}" class="btn-nav">Add Product</a>
+            <a href="{{ url_for('generate_bill') }}" class="btn-nav">Generate Bill</a>
+            <a href="{{ url_for('search_bill') }}" class="btn-nav">Search Bill</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Product List</h2>
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product[0] }}</td>
+                    <td>{{ product[1] }}</td>
+                    <td>{{ product[2] }}</td>
+                    <td>{{ product[3] }}</td>
+                    <td>
+                        <a href="{{ url_for('update_product', product_id=product[0]) }}" class="btn-action">Update</a>
+                        <a href="{{ url_for('delete_product', product_id=product[0]) }}" class="btn-action">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>

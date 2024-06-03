@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Bill - Supermarket Billing System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        header {
+            width: 100%;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        header h1 {
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+        }
+        nav {
+            position: absolute;
+            left: 20px;
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        nav a:hover {
+            background-color: #0056b3;
+        }
+        main {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 100px; /* Add some margin to avoid overlap with header */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            margin-left: 10px;
+            color: #333333;
+        }
+        .btn-submit {
+            background-color: #28a745;
+            color: #ffffff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background-color: #218838;
+        }
+        .bill-summary {
+            margin-top: 20px;
+            width: 100%;
+        }
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .bill-table th, .bill-table td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        .bill-table th {
+            background-color: #f2f2f2;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="http://127.0.0.1:5000/">Home</a>
+        </nav>
+        <h1>Search Bill</h1>
+    </header>
+    <main>
+        <form method="POST" class="form-container">
+            <div class="form-group">
+                <label for="bill_number">Enter Bill Number:</label>
+                <input type="text" id="bill_number" name="bill_number" required>
+            </div>
+            <button type="submit" class="btn-submit">Search</button>
+        </form>
+        {% if bill %}
+        <section class="bill-summary" id="bill-summary">
+            <h2>Bill Number: {{ bill['bill_number'] }}</h2>
+            <h2>Total Bill: ${{ bill['total'] }}</h2>
+            <table class="bill-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in bill['products'] %}
+                    <tr>
+                        <td>{{ product['name'] }}</td>
+                        <td>{{ product['price'] }}</td>
+                        <td>{{ product['quantity'] }}</td>
+                        <td>{{ product['total'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        {% else %}
+        <p class="error-message">Bill not found.</p>
+        {% endif %}
+    </main>
+</body>
+</html>
